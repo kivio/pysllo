@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='structured-logging',
+    name='pysllo',
     version='0.1',
-    packages=['structured-logging'],
+    packages=['pysllo'],
     url='',
     license='BSD',
     author='kivio',

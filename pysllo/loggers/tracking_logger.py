@@ -3,5 +3,5 @@
 from logging import Logger
 
 
-class StructuredLogger(Logger):
+class TrackingLogger(Logger):
     pass

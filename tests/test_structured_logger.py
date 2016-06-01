@@ -15,7 +15,8 @@ def logger(handler):
     logging.setLoggerClass(StructuredLogger)
     log = logging.getLogger('test')
     assert isinstance(log, StructuredLogger), \
-        'got {!r} from {!r} - expected {!r}'.format(log.__class__, logging, StructuredLogger.__class__)
+        'got {!r} from {!r} - expected {!r}'.format(
+            log.__class__, logging, StructuredLogger.__class__)
     log.setLevel(logging.DEBUG)
     log.addHandler(handler)
     return log

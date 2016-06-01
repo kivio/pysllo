@@ -8,5 +8,6 @@ setup(
     license='BSD',
     author='kivio',
     author_email='kivio@kivio.pl',
-    description='Make your python logging more structured and easy to aggregate'
+    description='Make your python logging more '
+                'structured and easy to aggregate'
 )

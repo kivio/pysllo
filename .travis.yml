@@ -17,5 +17,5 @@ install:
   - if [ "$TRAVIS_PYTHON_VERSION" == "3.2" ]; then travis_retry pip install coverage==3.7.1; fi
   - if [ "$TRAVIS_PYTHON_VERSION" != "3.2" ]; then travis_retry pip install coverage; fi
 script:
-  - py.test --pep8
+  - py.test --cov=pysllo -v --pep8
 after_success: coveralls

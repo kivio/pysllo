@@ -4,4 +4,6 @@ from logging import Logger
 
 
 class StructuredLogger(Logger):
-    pass
+
+    def __getattribute__(self, name):
+        return object.__getattribute__(self, name)

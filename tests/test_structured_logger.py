@@ -57,18 +57,65 @@ def test_simple_exception(struct_logger, handler):
     assert record.exc_info[0] == e
 
 
-def test_simple_string_format_msg(struct_logger, handler):
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_simple_string_format_msg(level, struct_logger, handler):
+    levelname = logging.getLevelName(level)
     msg = "TEST {}"
     sub = "SUB_TEST"
-    struct_logger.debug(msg, sub)
+    level_mapper(struct_logger, levelname)(msg, sub)
     record = handler.pop()
     assert record.msg == msg
     assert sub in record.args
 
 
-def test_simple_extra(struct_logger, handler):
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_simple_extra(level, struct_logger, handler):
+    levelname = logging.getLevelName(level)
     msg = "TEST"
-    struct_logger.debug(msg, extra={'TEST': 'TEST'})
+    level_mapper(struct_logger, levelname)(msg, extra={'TEST': 'TEST'})
+    record = handler.pop()
+    assert record.msg == msg
+    assert 'TEST' in record.__dict__
+    assert record.TEST == 'TEST'
+
+
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_extra_by_kwargs(level, struct_logger, handler):
+    levelname = logging.getLevelName(level)
+    msg = "TEST"
+    level_mapper(struct_logger, levelname)(msg, TEST='TEST')
+    record = handler.pop()
+    assert record.msg == msg
+    assert 'TEST' in record.__dict__
+    assert record.TEST == 'TEST'
+
+
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_bind_extras(level, struct_logger, handler):
+    levelname = logging.getLevelName(level)
+    msg = "TEST"
+    struct_logger.bind(TEST='TEST')
+    level_mapper(struct_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' in record.__dict__

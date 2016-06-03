@@ -2,6 +2,17 @@ import pytest
 import logging
 
 
+def level_mapper(obj, level):
+    func_mapper = {
+        'DEBUG': obj.debug,
+        'INFO': obj.info,
+        'WARNING': obj.warning,
+        'CRITICAL': obj.critical,
+        'ERROR': obj.error
+    }
+    return func_mapper[level]
+
+
 @pytest.mark.parametrize('level',
                          [logging.DEBUG,
                           logging.INFO,
@@ -11,7 +22,7 @@ import logging
 def test_simple_logging(level, struct_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    struct_logger.__getattribute__(levelname.lower())(msg)
+    level_mapper(struct_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert record.levelname == levelname

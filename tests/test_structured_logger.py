@@ -163,10 +163,11 @@ def test_unbind_all_extras(level, struct_logger, handler):
                           logging.CRITICAL,
                           logging.ERROR])
 def test_unbind_just_one_extras(level, struct_logger, handler):
+    levelname = logging.getLevelName(level)
     msg = "TEST"
     struct_logger.bind(TEST='TEST', TEST1='TEST1')
     struct_logger.unbind('TEST')
-    struct_logger.debug(msg)
+    level_mapper(struct_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' not in record.__dict__

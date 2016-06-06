@@ -173,3 +173,39 @@ def test_unbind_just_one_extras(level, struct_logger, handler):
     assert 'TEST' not in record.__dict__
     assert 'TEST1' in record.__dict__
     assert record.TEST1 == 'TEST1'
+
+
+@pytest.fixture()
+def struct_logger1(struct_logger):
+    return struct_logger
+
+
+@pytest.fixture()
+def struct_logger2(struct_logger):
+    return struct_logger
+
+
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_context_singleton(level, struct_logger1, struct_logger2, handler):
+    msg1 = "TEST1"
+    msg2 = "TEST2"
+    levelname = logging.getLevelName(level)
+    struct_logger1.bind(TEST='TEST')
+    level_mapper(struct_logger1, levelname)(msg1)
+    level_mapper(struct_logger2, levelname)(msg2)
+
+    record_2 = handler.pop()
+    record_1 = handler.pop()
+
+    assert record_1.msg == msg1
+    assert record_2.msg == msg2
+    assert 'TEST' in record_1.__dict__
+    assert 'TEST' in record_2.__dict__
+    assert record_1.TEST == 'TEST'
+    assert record_2.TEST == 'TEST'
+    assert id(struct_logger1) == id(struct_logger2)

@@ -209,3 +209,16 @@ def test_context_singleton(level, struct_logger1, struct_logger2, handler):
     assert record_1.TEST == 'TEST'
     assert record_2.TEST == 'TEST'
     assert id(struct_logger1) == id(struct_logger2)
+
+
+def test_contain_extras(struct_logger):
+    struct_logger.bind(TEST='TEST')
+    assert 'TEST' in struct_logger
+
+
+def test_get_from_context(struct_logger):
+    struct_logger.bind(TEST='TEST')
+    assert 'TEST' in struct_logger
+    assert struct_logger.get('TEST') == 'TEST'
+    assert struct_logger.get('TEST2') is None
+    assert struct_logger.get('TEST3', 'NO') == 'NO'

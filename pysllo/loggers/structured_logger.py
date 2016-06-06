@@ -18,6 +18,12 @@ class StructuredLogger(Logger):
         kwargs = self._proper_extra(kwargs)
         Logger._log(self, level, msg, args, **kwargs)
 
+    def __contains__(self, item):
+        return item in self._context
+
+    def get(self, item, default=None):
+        return self._context.get(item, default)
+
     @staticmethod
     def bind(**kwargs):
         StructuredLogger._context.update(kwargs)

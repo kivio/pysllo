@@ -120,3 +120,55 @@ def test_bind_extras(level, struct_logger, handler):
     assert record.msg == msg
     assert 'TEST' in record.__dict__
     assert record.TEST == 'TEST'
+
+
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_unbind_extras_by_name(level, struct_logger, handler):
+    levelname = logging.getLevelName(level)
+    msg = "TEST"
+    struct_logger.bind(TEST='TEST')
+    struct_logger.unbind('TEST')
+    level_mapper(struct_logger, levelname)(msg)
+    record = handler.pop()
+    assert record.msg == msg
+    assert 'TEST' not in record.__dict__
+
+
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_unbind_all_extras(level, struct_logger, handler):
+    levelname = logging.getLevelName(level)
+    msg = "TEST"
+    struct_logger.bind(TEST='TEST')
+    struct_logger.unbind()
+    level_mapper(struct_logger, levelname)(msg)
+    record = handler.pop()
+    assert record.msg == msg
+    assert 'TEST' not in record.__dict__
+
+
+@pytest.mark.parametrize('level',
+                         [logging.DEBUG,
+                          logging.INFO,
+                          logging.WARNING,
+                          logging.CRITICAL,
+                          logging.ERROR])
+def test_unbind_just_one_extras(level, struct_logger, handler):
+    msg = "TEST"
+    struct_logger.bind(TEST='TEST', TEST1='TEST1')
+    struct_logger.unbind('TEST')
+    struct_logger.debug(msg)
+    record = handler.pop()
+    assert record.msg == msg
+    assert 'TEST' not in record.__dict__
+    assert 'TEST1' in record.__dict__
+    assert record.TEST1 == 'TEST1'

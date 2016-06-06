@@ -21,3 +21,11 @@ class StructuredLogger(Logger):
     @staticmethod
     def bind(**kwargs):
         StructuredLogger._context.update(kwargs)
+
+    @staticmethod
+    def unbind(*args):
+        if args:
+            for arg in args:
+                StructuredLogger._context.pop(arg)
+        else:
+            StructuredLogger._context = {}

@@ -10,6 +10,10 @@ class LoggersFactory(object):
     def make(structured_logger=False,
              propagation_logger=False,
              tracking_logger=False):
+
+        # fix for python 2.6 compatibility
+        Logger.__base__.__bases__ = (object,)
+
         cls_list = []
         if structured_logger:
             cls_list.append(StructuredLogger)

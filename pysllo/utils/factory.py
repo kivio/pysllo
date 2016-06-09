@@ -10,11 +10,13 @@ class LoggersFactory(object):
     def make(structured_logger=False,
              propagation_logger=False,
              tracking_logger=False):
-        cls_list = [Logger]
+        cls_list = []
         if structured_logger:
             cls_list.append(StructuredLogger)
-        elif propagation_logger:
+        if propagation_logger:
             cls_list.append(PropagationLogger)
-        elif tracking_logger:
+        if tracking_logger:
             cls_list.append(TrackingLogger)
-        return type('MixedLogger', cls_list, {})
+        if not len(cls_list):
+            cls_list.append(Logger)
+        return type('MixedLogger', tuple(cls_list), {})

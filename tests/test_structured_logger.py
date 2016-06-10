@@ -226,13 +226,15 @@ def test_get_from_context(struct_logger):
 
 def test_level_exception_with_extra_args(struct_logger, handler):
     msg = "TEST"
+    e = None
     try:
-        raise Exception()
-    except Exception as e:
+        e = Exception()
+        raise e
+    except Exception:
         struct_logger.exception(msg, TEST='TEST')
     record = handler.pop()
     assert record.msg == msg
     assert record.levelname == logging.getLevelName(logging.ERROR)
-    assert isinstance(e, record.exc_info[0])
+    assert record.exc_info[0] == e
     assert 'TEST' in record.__dict__
     assert record.TEST == 'TEST'

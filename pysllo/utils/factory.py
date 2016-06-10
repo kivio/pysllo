@@ -12,7 +12,7 @@ class LoggersFactory(object):
              tracking_logger=False):
 
         # fix for python 2.6 compatibility
-        Logger.__base__.__bases__ = (object,)
+        setattr(Logger.__bases__[0], '__mro__', (object, ))
 
         cls_list = []
         if structured_logger:

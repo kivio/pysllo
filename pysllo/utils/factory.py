@@ -16,7 +16,7 @@ class LoggersFactory(object):
             pass
 
         import sys
-        if sys.version_info.major == 2 and sys.version_info.minor == 6:
+        if sys.version.startswith('2.6'):
             setattr(Logger.__bases__[0], '__mro__', object)
 
         cls_list = []

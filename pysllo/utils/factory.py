@@ -12,7 +12,12 @@ class LoggersFactory(object):
              tracking_logger=False):
 
         # fix for python 2.6 compatibility
-        setattr(Logger.__bases__[0], '__mro__', (object, ))
+        class XYZ(object):
+            pass
+
+        import sys
+        if sys.version_info.major == 2 and sys.version_info.minor == 6:
+            setattr(Logger.__bases__[0], '__mro__', object)
 
         cls_list = []
         if structured_logger:
@@ -22,5 +27,5 @@ class LoggersFactory(object):
         if tracking_logger:
             cls_list.append(TrackingLogger)
         if not len(cls_list):
-            cls_list.append(Logger)
+            cls_list.extend([Logger, XYZ])
         return type('MixedLogger', tuple(cls_list), {})

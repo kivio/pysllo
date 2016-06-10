@@ -235,6 +235,6 @@ def test_level_exception_with_extra_args(struct_logger, handler):
     record = handler.pop()
     assert record.msg == msg
     assert record.levelname == logging.getLevelName(logging.ERROR)
-    assert record.exc_info[0] == e
+    assert isinstance(e, record.exc_info[0])
     assert 'TEST' in record.__dict__
     assert record.TEST == 'TEST'

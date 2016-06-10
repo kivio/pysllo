@@ -50,7 +50,7 @@ class PropagationLogger(Logger):
     def force_level(*args, **kwargs):
         if len(args) > 1:
             raise TypeError("force_level() takes exactly one argument"
-                            " or named arguments ({} given)".format(len(args)))
+                            " or named arguments ({0} given)".format(len(args)))
 
         elif len(args) == 1:
             if isinstance(args[0], int):

@@ -27,5 +27,6 @@ class LoggersFactory(object):
         if tracking_logger:
             cls_list.append(TrackingLogger)
         if not len(cls_list):
-            cls_list.extend([Logger, XYZ])
+            cls_list.append(Logger)
+        cls_list.append(XYZ)
         return type('MixedLogger', tuple(cls_list), {})

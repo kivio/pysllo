@@ -18,3 +18,14 @@ class TestHandler(logging.Handler):
 
     def __len__(self):
         return len(self._records)
+
+
+def level_mapper(obj, level):
+    func_mapper = {
+        'DEBUG': obj.debug,
+        'INFO': obj.info,
+        'WARNING': obj.warning,
+        'CRITICAL': obj.critical,
+        'ERROR': obj.error
+    }
+    return func_mapper[level]

@@ -2,15 +2,7 @@ import pytest
 import logging
 
 
-def level_mapper(obj, level):
-    func_mapper = {
-        'DEBUG': obj.debug,
-        'INFO': obj.info,
-        'WARNING': obj.warning,
-        'CRITICAL': obj.critical,
-        'ERROR': obj.error
-    }
-    return func_mapper[level]
+from .utils import level_mapper
 
 
 @pytest.mark.parametrize('level',
@@ -19,10 +11,10 @@ def level_mapper(obj, level):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_simple_logging(level, struct_logger, handler):
+def test_simple_logging(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    level_mapper(struct_logger, levelname)(msg)
+    level_mapper(structured_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert record.levelname == levelname
@@ -34,23 +26,23 @@ def test_simple_logging(level, struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_simple_log(level, struct_logger, handler):
+def test_simple_log(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    struct_logger.log(level, msg)
+    structured_logger.log(level, msg)
     record = handler.pop()
     assert record.msg == msg
     assert record.levelname == levelname
 
 
-def test_simple_exception(struct_logger, handler):
+def test_simple_exception(structured_logger, handler):
     msg = "TEST"
     e = None
     try:
         e = Exception
         raise e
     except Exception:
-        struct_logger.exception(msg)
+        structured_logger.exception(msg)
     record = handler.pop()
     assert record.msg == msg
     assert record.levelname == logging.getLevelName(logging.ERROR)
@@ -63,11 +55,11 @@ def test_simple_exception(struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_simple_string_format_msg(level, struct_logger, handler):
+def test_simple_string_format_msg(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST {}"
     sub = "SUB_TEST"
-    level_mapper(struct_logger, levelname)(msg, sub)
+    level_mapper(structured_logger, levelname)(msg, sub)
     record = handler.pop()
     assert record.msg == msg
     assert sub in record.args
@@ -79,10 +71,10 @@ def test_simple_string_format_msg(level, struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_simple_extra(level, struct_logger, handler):
+def test_simple_extra(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    level_mapper(struct_logger, levelname)(msg, extra={'TEST': 'TEST'})
+    level_mapper(structured_logger, levelname)(msg, extra={'TEST': 'TEST'})
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' in record.__dict__
@@ -95,10 +87,10 @@ def test_simple_extra(level, struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_extra_by_kwargs(level, struct_logger, handler):
+def test_extra_by_kwargs(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    level_mapper(struct_logger, levelname)(msg, TEST='TEST')
+    level_mapper(structured_logger, levelname)(msg, TEST='TEST')
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' in record.__dict__
@@ -111,11 +103,11 @@ def test_extra_by_kwargs(level, struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_bind_extras(level, struct_logger, handler):
+def test_bind_extras(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    struct_logger.bind(TEST='TEST')
-    level_mapper(struct_logger, levelname)(msg)
+    structured_logger.bind(TEST='TEST')
+    level_mapper(structured_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' in record.__dict__
@@ -128,12 +120,12 @@ def test_bind_extras(level, struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_unbind_extras_by_name(level, struct_logger, handler):
+def test_unbind_extras_by_name(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    struct_logger.bind(TEST='TEST')
-    struct_logger.unbind('TEST')
-    level_mapper(struct_logger, levelname)(msg)
+    structured_logger.bind(TEST='TEST')
+    structured_logger.unbind('TEST')
+    level_mapper(structured_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' not in record.__dict__
@@ -145,12 +137,12 @@ def test_unbind_extras_by_name(level, struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_unbind_all_extras(level, struct_logger, handler):
+def test_unbind_all_extras(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    struct_logger.bind(TEST='TEST')
-    struct_logger.unbind()
-    level_mapper(struct_logger, levelname)(msg)
+    structured_logger.bind(TEST='TEST')
+    structured_logger.unbind()
+    level_mapper(structured_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' not in record.__dict__
@@ -162,12 +154,12 @@ def test_unbind_all_extras(level, struct_logger, handler):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_unbind_just_one_extras(level, struct_logger, handler):
+def test_unbind_just_one_extras(level, structured_logger, handler):
     levelname = logging.getLevelName(level)
     msg = "TEST"
-    struct_logger.bind(TEST='TEST', TEST1='TEST1')
-    struct_logger.unbind('TEST')
-    level_mapper(struct_logger, levelname)(msg)
+    structured_logger.bind(TEST='TEST', TEST1='TEST1')
+    structured_logger.unbind('TEST')
+    level_mapper(structured_logger, levelname)(msg)
     record = handler.pop()
     assert record.msg == msg
     assert 'TEST' not in record.__dict__
@@ -176,13 +168,13 @@ def test_unbind_just_one_extras(level, struct_logger, handler):
 
 
 @pytest.fixture()
-def struct_logger1(struct_logger):
-    return struct_logger
+def structured_logger1(structured_logger):
+    return structured_logger
 
 
 @pytest.fixture()
-def struct_logger2(struct_logger):
-    return struct_logger
+def structured_logger2(structured_logger):
+    return structured_logger
 
 
 @pytest.mark.parametrize('level',
@@ -191,13 +183,14 @@ def struct_logger2(struct_logger):
                           logging.WARNING,
                           logging.CRITICAL,
                           logging.ERROR])
-def test_context_singleton(level, struct_logger1, struct_logger2, handler):
+def test_context_singleton(level, structured_logger1,
+                           structured_logger2, handler):
     msg1 = "TEST1"
     msg2 = "TEST2"
     levelname = logging.getLevelName(level)
-    struct_logger1.bind(TEST='TEST')
-    level_mapper(struct_logger1, levelname)(msg1)
-    level_mapper(struct_logger2, levelname)(msg2)
+    structured_logger1.bind(TEST='TEST')
+    level_mapper(structured_logger1, levelname)(msg1)
+    level_mapper(structured_logger2, levelname)(msg2)
 
     record_2 = handler.pop()
     record_1 = handler.pop()
@@ -208,30 +201,30 @@ def test_context_singleton(level, struct_logger1, struct_logger2, handler):
     assert 'TEST' in record_2.__dict__
     assert record_1.TEST == 'TEST'
     assert record_2.TEST == 'TEST'
-    assert id(struct_logger1) == id(struct_logger2)
+    assert id(structured_logger1) == id(structured_logger2)
 
 
-def test_contain_extras(struct_logger):
-    struct_logger.bind(TEST='TEST')
-    assert 'TEST' in struct_logger
+def test_contain_extras(structured_logger):
+    structured_logger.bind(TEST='TEST')
+    assert 'TEST' in structured_logger
 
 
-def test_get_from_context(struct_logger):
-    struct_logger.bind(TEST='TEST')
-    assert 'TEST' in struct_logger
-    assert struct_logger.get('TEST') == 'TEST'
-    assert struct_logger.get('TEST2') is None
-    assert struct_logger.get('TEST3', 'NO') == 'NO'
+def test_get_from_context(structured_logger):
+    structured_logger.bind(TEST='TEST')
+    assert 'TEST' in structured_logger
+    assert structured_logger.get('TEST') == 'TEST'
+    assert structured_logger.get('TEST2') is None
+    assert structured_logger.get('TEST3', 'NO') == 'NO'
 
 
-def test_level_exception_with_extra_args(struct_logger, handler):
+def test_level_exception_with_extra_args(structured_logger, handler):
     msg = "TEST"
     e = None
     try:
         e = Exception()
         raise e
     except Exception:
-        struct_logger.exception(msg, TEST='TEST')
+        structured_logger.exception(msg, TEST='TEST')
     record = handler.pop()
     assert record.msg == msg
     assert record.levelname == logging.getLevelName(logging.ERROR)

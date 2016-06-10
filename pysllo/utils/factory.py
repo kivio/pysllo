@@ -11,12 +11,12 @@ class LoggersFactory(object):
              propagation_logger=False,
              tracking_logger=False):
 
-        # fix for python 2.6 compatibility
         class XYZ(object):
             pass
 
+        # fix for python 2.6 compatibility
         import sys
-        if sys.version.startswith('2.6'):
+        if sys.version.startswith('2.6'):  # pragma: no cover
             setattr(Logger.__bases__[0], '__mro__', object)
 
         cls_list = []

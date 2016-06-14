@@ -1,9 +1,6 @@
 import pytest
 import logging
 
-from pysllo.loggers.propagation_logger import PropagationLogger
-from pysllo.loggers.structured_logger import StructuredLogger
-from pysllo.loggers.tracking_logger import TrackingLogger
 from tests.utils import TestHandler
 
 
@@ -32,14 +29,17 @@ def logger(request, handler):
 
 @pytest.fixture()
 def structured_logger(logger, handler):
+    from pysllo.loggers import StructuredLogger
     return logger(StructuredLogger)
 
 
 @pytest.fixture()
 def track_logger(logger, handler):
+    from pysllo.loggers import TrackingLogger
     return logger(TrackingLogger)
 
 
 @pytest.fixture()
 def propagation_logger(logger, handler):
+    from pysllo.loggers import PropagationLogger
     return logger(PropagationLogger)

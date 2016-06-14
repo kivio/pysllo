@@ -1,7 +1,4 @@
 from logging import Logger
-from ..loggers import StructuredLogger
-from ..loggers import PropagationLogger
-from ..loggers import TrackingLogger
 
 
 class LoggersFactory(object):
@@ -21,11 +18,15 @@ class LoggersFactory(object):
 
         cls_list = []
         if structured_logger:
+            from ..loggers import StructuredLogger
             cls_list.append(StructuredLogger)
         if tracking_logger:
+            from ..loggers import TrackingLogger
             cls_list.append(TrackingLogger)
         if propagation_logger:
+            from ..loggers import TrackingLogger
             if TrackingLogger not in cls_list:
+                from ..loggers import PropagationLogger
                 cls_list.append(PropagationLogger)
         if not len(cls_list):
             cls_list.append(Logger)

@@ -33,7 +33,9 @@ class TrackingLogger(PropagationLogger):
             self.reset_level()
 
         logs = TrackingLogger._tracer.dump_logs()
-        map(lambda log: self.log(*log), logs)
+        for log in logs:
+            level, msg, args, kwargs = log
+            self._log(level, msg, args, **kwargs)
 
         if reset_level_after:
             self.reset_level()
@@ -49,4 +51,5 @@ class TrackingLogger(PropagationLogger):
         if TrackingLogger._is_tracking_enable:
             TrackingLogger._tracer.log(level, msg, args, **kwargs)
         else:
-            PropagationLogger._log(self, level, msg, args, **kwargs)
+            if self.isEnabledFor(level):
+                PropagationLogger._log(self, level, msg, args, **kwargs)

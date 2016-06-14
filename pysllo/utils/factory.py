@@ -22,10 +22,11 @@ class LoggersFactory(object):
         cls_list = []
         if structured_logger:
             cls_list.append(StructuredLogger)
-        if propagation_logger:
-            cls_list.append(PropagationLogger)
         if tracking_logger:
             cls_list.append(TrackingLogger)
+        if propagation_logger:
+            if TrackingLogger not in cls_list:
+                cls_list.append(PropagationLogger)
         if not len(cls_list):
             cls_list.append(Logger)
         cls_list.append(XYZ)

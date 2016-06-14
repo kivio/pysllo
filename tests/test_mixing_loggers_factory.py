@@ -32,7 +32,7 @@ def test_tracking_logger():
     logger = LoggersFactory.make(tracking_logger=True)
     assert issubclass(logger, Logger)
     assert not issubclass(logger, loggers.StructuredLogger)
-    assert not issubclass(logger, loggers.PropagationLogger)
+    assert issubclass(logger, loggers.PropagationLogger)
     assert issubclass(logger, loggers.TrackingLogger)
 
 

@@ -1,7 +1,7 @@
 # coding:utf-8
 
-from logging import Logger
+from .propagation_logger import PropagationLogger
 
 
-class TrackingLogger(Logger):
+class TrackingLogger(PropagationLogger):
     pass

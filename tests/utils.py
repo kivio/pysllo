@@ -29,3 +29,24 @@ def level_mapper(obj, level):
         'ERROR': obj.error
     }
     return func_mapper[level]
+
+
+class TestSocket(object):
+
+    def __init__(self):
+        self._records = []
+
+    def sendto(self, data, connection):
+        self._records.append((data, connection))
+
+    def send(self, data):
+        self._records.append(data)
+
+    def pop(self):
+        return self._records.pop()
+
+    def pop_with_connection(self):
+        return self._records.pop()
+
+    def flush(self):
+        self._records = []

@@ -65,15 +65,12 @@ def test_rounded_connection(socket, buffer_with_rounding):
 
 
 def test_over_udp_limit(socket, buffer):
-    import sys
-    version = sys.version_info
-    if version[0] == 3:
-        buffer._limit = 54
-    else:
-        buffer._limit = 44
-
     msg1 = "TEST1"
     msg2 = "TEST2"
+
+    import sys
+    buffer._limit = sys.getsizeof(msg1) + 1
+
     buffer.send([msg1, msg2])
     data_2 = socket.pop_with_connection()[0]
     data_1 = socket.pop_with_connection()[0]

@@ -1,6 +1,9 @@
+import sys
 import pytest
 
 
+@pytest.mark.skipif(hasattr(sys, 'pypy_version_info'),
+                    reason="pypy has not support for getsizeof method")
 @pytest.fixture()
 def socket():
     from tests.utils import TestSocket

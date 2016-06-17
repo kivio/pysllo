@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.fixture()
 def socket():
     from tests.utils import TestSocket

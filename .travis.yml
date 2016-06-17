@@ -2,20 +2,13 @@ language: python
 python:
   - "2.6"
   - "2.7"
-  - "3.2"
   - "3.3"
   - "3.4"
   - "3.5"
-  # does not have headers provided, please ask https://launchpad.net/~pypy/+archive/ppa
-  # maintainers to fix their pypy-dev package.
-  - "pypy"
 # command to run tests
 install:
   - pip install pytest pytest-cov pytest-pep8
   - pip install coveralls
-  # Coveralls 4.0 doesn't support Python 3.2
-  - if [ "$TRAVIS_PYTHON_VERSION" == "3.2" ]; then travis_retry pip install coverage==3.7.1; fi
-  - if [ "$TRAVIS_PYTHON_VERSION" != "3.2" ]; then travis_retry pip install coverage; fi
 script:
   - py.test --cov=pysllo -v --pep8
 after_success: coveralls

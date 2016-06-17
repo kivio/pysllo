@@ -1,11 +1,4 @@
-import sys
 import pytest
-
-
-if_cpython = pytest.mark.skipif(hasattr(sys, 'pypy_version_info'),
-                                reason="pypy has not support "
-                                       "for getsizeof method")
-
 
 @pytest.fixture()
 def socket():
@@ -31,7 +24,6 @@ def buffer_with_rounding(socket):
     return udp
 
 
-@if_cpython
 def test_simple_sending(socket, buffer):
     msg = "TEST"
     buffer.send(msg)
@@ -41,7 +33,6 @@ def test_simple_sending(socket, buffer):
     assert port == 9700
 
 
-@if_cpython
 def test_too_long_message(socket, buffer):
     limit = 10
     buffer._limit = limit
@@ -53,7 +44,6 @@ def test_too_long_message(socket, buffer):
         socket.pop_with_connection()
 
 
-@if_cpython
 def test_rounded_connection(socket, buffer_with_rounding):
 
     msg1 = "TEST1"
@@ -73,7 +63,6 @@ def test_rounded_connection(socket, buffer_with_rounding):
     assert port_2 == 9701
 
 
-@if_cpython
 def test_over_udp_limit(socket, buffer):
     msg1 = "TEST1"
     msg2 = "TEST2"

@@ -4,7 +4,7 @@ setup(
     name='pysllo',
     version='0.1',
     packages=['pysllo'],
-    url='',
+    url='http://pysllo.readthedocs.io/',
     license='BSD',
     author='kivio',
     author_email='kivio@kivio.pl',

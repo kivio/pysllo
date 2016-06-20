@@ -10,7 +10,7 @@ Pysllo is set of useful python logging extenders that make possible saving logs 
  with possibility of flow tracking, data binding and raising all logs if error occurs.
 
 
-For more information go to documentation on [ReadTheDocs](https://readthedocs.org/projects/pysllo).
+For more information go to documentation on [ReadTheDocs](http://pysllo.readthedocs.io/).
 
 Quick start
 -----------

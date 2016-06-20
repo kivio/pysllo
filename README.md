@@ -5,11 +5,19 @@
 Pysllo
 ======
 
-Make your python logging more structured and easy to aggregate
+Make your python logging more structured and easy to aggregate using all features of pysllo.
+Pysllo is set of useful python logging extenders that make possible saving logs into StackLight
+ with possibility of flow tracking, data binding and raising all logs if error occurs.
 
+
+For more information go to documentation on [ReadTheDocs](https://readthedocs.org/projects/pysllo).
 
 Quick start
 -----------
+
+```bash
+pip install pysllo
+```
 
 Features
 --------
@@ -22,3 +30,27 @@ Features
 
 Example
 -------
+
+```python
+from pysllo.handlers import ElasticSearchUDPHandler
+from pysllo.formatters import JsonFormatter
+from pysllo.utils import LoggersFactory
+
+# configuration
+host, port, limit = 'localhost', 9000
+handler = ElasticSearchUDPHandler([(host, port)])
+formatter = JsonFormatter()
+handler.setFormatter(formatter)
+MixedLogger = LoggersFactory.make(
+        tracking_logger=True,
+        propagation_logger=True,
+        structured_logger=True
+    )
+logger = MixedLogger('test')
+logger.addHandler(handler)
+    
+# examlpe usage
+msg = "TEST"
+logger.bind(ip='127.0.0.1')
+logger.debug(msg, user=request.user)
+```

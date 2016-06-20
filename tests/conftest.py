@@ -1,12 +1,19 @@
 import pytest
 import logging
 
-from tests.utils import TestHandler
+from tests.utils import TestHandler, TestSocket
+from pysllo.formatters.json_formatter import JsonFormatter
+from pysllo.handlers import ElasticSearchUDPHandler
 
 
 @pytest.fixture()
 def handler():
     return TestHandler()
+
+
+@pytest.fixture()
+def socket():
+    return TestSocket()
 
 
 @pytest.fixture(scope='function')
@@ -43,3 +50,21 @@ def track_logger(logger, handler):
 def propagation_logger(logger, handler):
     from pysllo.loggers import PropagationLogger
     return logger(PropagationLogger)
+
+
+@pytest.fixture()
+def es_handler(socket):
+    host, port = 'localhost', 9000
+    handler = ElasticSearchUDPHandler([(host, port)], limit=1000)
+    handler._connection = socket
+    formatter = JsonFormatter(limit=1000)
+    handler.setFormatter(formatter)
+    return handler
+
+
+@pytest.fixture()
+def es_logger(es_handler):
+    log = logging.getLogger('test')
+    log.setLevel(logging.DEBUG)
+    log.addHandler(es_handler)
+    return log

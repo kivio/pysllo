@@ -1,42 +1,6 @@
 import logging
-import json
-import pytest
 
-from pysllo.formatters.json_formatter import JsonFormatter
-from pysllo.handlers import ElasticSearchUDPHandler
-from tests.utils import TestSocket
-
-
-@pytest.fixture()
-def socket():
-    return TestSocket()
-
-
-@pytest.fixture()
-def es_handler(socket):
-    host, port = 'localhost', 9000
-    handler = ElasticSearchUDPHandler([(host, port)], limit=1000)
-    handler._connection = socket
-    formatter = JsonFormatter(limit=1000)
-    handler.setFormatter(formatter)
-    return handler
-
-
-@pytest.fixture()
-def es_logger(es_handler):
-    log = logging.getLogger('test')
-    log.setLevel(logging.DEBUG)
-    log.addHandler(es_handler)
-    return log
-
-
-def socket_data(socket):
-    record = socket.pop()
-    result = []
-    for c in record:
-        data = c.split("\n")
-        result.append(json.loads(data[1]))
-    return result
+from tests.utils import socket_data
 
 
 def test_connection(es_logger, es_handler, socket):

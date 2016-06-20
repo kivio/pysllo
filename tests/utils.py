@@ -1,4 +1,5 @@
 import logging
+import json
 
 
 class TestHandler(logging.Handler):
@@ -50,3 +51,12 @@ class TestSocket(object):
 
     def flush(self):
         self._records = []
+
+
+def socket_data(socket):
+    record = socket.pop()
+    result = []
+    for c in record:
+        data = c.split("\n")
+        result.append(json.loads(data[1]))
+    return result

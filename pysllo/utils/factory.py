@@ -2,11 +2,24 @@ from logging import Logger
 
 
 class LoggersFactory(object):
+    """
+    LoggersFactory is static helper that makes combined Logger class with
+    possible maximum features that you want to use.
+    """
 
     @staticmethod
     def make(structured_logger=False,
              propagation_logger=False,
              tracking_logger=False):
+        """
+        Method based on your choices create on class that support all chooses
+        functions.
+
+        :param structured_logger: bool
+        :param propagation_logger: bool
+        :param tracking_logger: bool
+        :return: MixedLogger class
+        """
 
         class XYZ(object):
             pass

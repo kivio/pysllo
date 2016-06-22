@@ -14,6 +14,10 @@ logging_json_encoder = LoggingJSONEncoder()
 
 
 class JsonFormatter(logging.Formatter):
+    """
+    JsonFormatter give logging possibility to convert your logs into JSON
+    records that give possibility to save it in document based databases
+    """
 
     _limit = 9000
     _doc_type = 'logs'
@@ -24,6 +28,12 @@ class JsonFormatter(logging.Formatter):
 
     @staticmethod
     def format_exception(ei):
+        """
+        This method is helper that convert exception information into
+        dict with specific data
+        :param ei: exception info
+        :return:
+        """
         exc_class, exc_obj, trace = ei
         exc_class = repr(exc_class)
         trace = "".join(traceback.format_tb(trace))
@@ -87,6 +97,13 @@ class JsonFormatter(logging.Formatter):
 
     @staticmethod
     def serialize_record(record, index_data, limit):
+        """
+        This method transfer and processes log record into JSON object
+        :param record:
+        :param index_data:
+        :param limit:
+        :return:
+        """
         if record.name in ('elasticsearch', 'urllib3.connectionpool'):
             return ''
 
@@ -133,12 +150,21 @@ class JsonFormatter(logging.Formatter):
 
     @staticmethod
     def index():
+        """
+        Special method that create identifier for today logs
+        :return: dict
+        """
         return '-'.join([
             JsonFormatter._doc_type,
             datetime.date.today().strftime('%Y-%m-%d')
         ])
 
     def format(self, record):
+        """
+        It's standard logging method to format record to JSON
+        :param record:
+        :return:
+        """
         index_data = {
             'index': {
                 '_index': self.index(),

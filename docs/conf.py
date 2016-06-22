@@ -127,7 +127,8 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-    'fixed_sidebar': True
+    'fixed_sidebar': True,
+    'analytics_id': 'UA-79713650-1',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

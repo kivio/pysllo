@@ -13,10 +13,12 @@ class PropagationLogger(Logger):
     manually your own.
 
     To use it:
-    import logging
-    from pysllo.loggers import PropagationLogger
-    logging.setLoggerClass(PropagationLogger)
-    log = logging.getLogger('name')
+
+    >>> import logging
+    >>> from pysllo.loggers import PropagationLogger
+    >>> logging.setLoggerClass(PropagationLogger)
+    >>> log = logging.getLogger('name')
+
     """
 
     _forcing = {}
@@ -29,8 +31,8 @@ class PropagationLogger(Logger):
     def set_propagation(self, propagation=True):
         """
         Function that enable/disable propagation level functionality
+
         :param propagation: bool
-        :return: None
         """
         if isinstance(propagation, bool):
             self._level_propagation = propagation
@@ -58,7 +60,6 @@ class PropagationLogger(Logger):
     def reset_level():
         """
         Resetting level of propagation
-        :return:
         """
         PropagationLogger._global_propagation_level = logging.NOTSET
 
@@ -66,8 +67,8 @@ class PropagationLogger(Logger):
     def level_propagation(level):
         """
         Decorator that give propagation functionality to decorated function
+
         :param level: int - logging level
-        :return:
         """
         def decor(f):
             @wraps(f)
@@ -83,9 +84,9 @@ class PropagationLogger(Logger):
     def force_level(*args, **kwargs):
         """
         Function that make possible to force level value for specific loggers
+
         :param args: level name or dict with configuration
         :param kwargs: name of logger and value
-        :return:
         """
         if len(args) > 1:
             raise TypeError("force_level() takes exactly one argument "

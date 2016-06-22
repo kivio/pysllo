@@ -12,10 +12,12 @@ class TrackingLogger(PropagationLogger):
     context apart of logging level
 
     To use it:
-    import logging
-    from pysllo.loggers import TrackingLogger
-    logging.setLoggerClass(TrackingLogger)
-    log = logging.getLogger('name')
+
+    >>> import logging
+    >>> from pysllo.loggers import TrackingLogger
+    >>> logging.setLoggerClass(TrackingLogger)
+    >>> log = logging.getLogger('name')
+
     """
 
     _tracer = Tracer()
@@ -30,6 +32,7 @@ class TrackingLogger(PropagationLogger):
         """
         Return tracer object, tracer make possible to track logs by context
         or as decorator
+
         :return: Tracer
         """
         return self._trace_ctx
@@ -42,8 +45,8 @@ class TrackingLogger(PropagationLogger):
         """
         Make tracking enable in whole logging. If force_level is configured on
         other level that after exception logs to that level were pushed out.
+
         :param force_level: int - logging level
-        :return:
         """
         TrackingLogger._is_tracking_enable = True
         self.force_level(force_level)
@@ -65,7 +68,6 @@ class TrackingLogger(PropagationLogger):
     def disable_tracking(self):
         """
         Disable tacking functionality
-        :return:
         """
         self._flush_tracer(reset_level_before=True)
 
@@ -73,7 +75,6 @@ class TrackingLogger(PropagationLogger):
         """
         Special function as helper to use after exception occurs.
         If you use trace object, is not required to use it manually.
-        :return:
         """
         self._flush_tracer(reset_level_after=True)
 

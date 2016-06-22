@@ -10,10 +10,12 @@ class StructuredLogger(Logger):
     extra parameter in default logger class
 
     To use it:
-    import logging
-    from pysllo.loggers import StructuredLogger
-    logging.setLoggerClass(StructurredLogger)
-    log = logging.getLogger('name')
+
+    >>> import logging
+    >>> from pysllo.loggers import StructuredLogger
+    >>> logging.setLoggerClass(StructurredLogger)
+    >>> log = logging.getLogger('name')
+
     """
     _context = {}
 
@@ -43,9 +45,13 @@ class StructuredLogger(Logger):
     def get(self, item, default=None):
         """
         Return value of item in context if exists
-        :param item: name of context element to get
-        :param default: default value if element is not in context
-        :return:
+
+        >>> log.get('ip')
+        127.0.0.1
+
+        :param item: (str) - name of context element to get
+        :param default: (object) - default value if element is not in context
+        :return: (object)
         """
         return self._context.get(item, default)
 
@@ -53,8 +59,10 @@ class StructuredLogger(Logger):
     def bind(**kwargs):
         """
         Bind params as context to logger
-        :param kwargs: list of named arguments
-        :return:
+
+        >>> log.bind(ip='127.0.0.1')
+
+        :param kwargs: (dict) - named parameters with values to bind
         """
         StructuredLogger._context.update(kwargs)
 
@@ -62,8 +70,11 @@ class StructuredLogger(Logger):
     def unbind(*args):
         """
         Remove params from context by names, possible to give list of names
-        :param args: names of context elements to remove
-        :return:
+
+        >>> log.unbind('ip')
+
+
+        :param args: (list) names of context elements to remove
         """
         if args:
             for arg in args:

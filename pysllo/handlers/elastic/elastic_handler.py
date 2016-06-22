@@ -36,8 +36,8 @@ class ElasticSearchUDPHandler(logging.Handler):
     def set_backup_path(path):
         """
         Set path to backup files
+
         :param path: unix path
-        :return:
         """
         ElasticSearchUDPHandler._backup_path = \
             path + ("/" if not path.endswith('/') else "")
@@ -47,7 +47,6 @@ class ElasticSearchUDPHandler(logging.Handler):
         """
         Enable backup functionality that make possible to make logs sending
         secure in situation of loosing connection.
-        :return:
         """
         ElasticSearchUDPHandler._backup_enabled = True
 
@@ -55,7 +54,6 @@ class ElasticSearchUDPHandler(logging.Handler):
     def disable_backup():
         """
         Disable backup functionality
-        :return:
         """
         ElasticSearchUDPHandler._backup_enabled = False
 
@@ -67,8 +65,8 @@ class ElasticSearchUDPHandler(logging.Handler):
         It's important to make there good number to make sure that you don't
         have too many connections to DB and to have too big snap of messages
         that can make delay's on real time dashboards
+
         :param limit: int, number of bytes
-        :return:
         """
         ElasticSearchUDPHandler._limit = limit
 
@@ -76,6 +74,7 @@ class ElasticSearchUDPHandler(logging.Handler):
     def index():
         """
         Special method that create identifier for today logs
+
         :return: dict
         """
         return '-'.join([
@@ -87,8 +86,8 @@ class ElasticSearchUDPHandler(logging.Handler):
         """
         Is standard logging Handler method that send message to receiver, in
         this case message is saved in buffer
+
         :param record:
-        :return:
         """
         msg = self.format(record)
         data_size = sys.getsizeof(msg, 0)
@@ -102,7 +101,6 @@ class ElasticSearchUDPHandler(logging.Handler):
     def flush(self):
         """
         Method to send buffered messages to cluster
-        :return:
         """
         self.acquire()
         payload = ElasticSearchUDPHandler._buffer
@@ -115,8 +113,8 @@ class ElasticSearchUDPHandler(logging.Handler):
     def backup(self, data):
         """
         Method that save messages to backup if this functionality is enabled
+
         :param data:
-        :return:
         """
         if self._backup_enabled:
             path = self._backup_path + self.index()
@@ -131,6 +129,5 @@ class ElasticSearchUDPHandler(logging.Handler):
         _handlers, which is used for handler lookup by name. Subclasses
         should ensure that this gets called from overridden close()
         methods.
-        :return:
         """
         self.flush()

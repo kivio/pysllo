@@ -31,8 +31,8 @@ class JsonFormatter(logging.Formatter):
         """
         This method is helper that convert exception information into
         dict with specific data
+
         :param ei: exception info
-        :return:
         """
         exc_class, exc_obj, trace = ei
         exc_class = repr(exc_class)
@@ -99,10 +99,10 @@ class JsonFormatter(logging.Formatter):
     def serialize_record(record, index_data, limit):
         """
         This method transfer and processes log record into JSON object
+
         :param record:
         :param index_data:
         :param limit:
-        :return:
         """
         if record.name in ('elasticsearch', 'urllib3.connectionpool'):
             return ''
@@ -152,6 +152,7 @@ class JsonFormatter(logging.Formatter):
     def index():
         """
         Special method that create identifier for today logs
+
         :return: dict
         """
         return '-'.join([
@@ -162,8 +163,8 @@ class JsonFormatter(logging.Formatter):
     def format(self, record):
         """
         It's standard logging method to format record to JSON
+
         :param record:
-        :return:
         """
         index_data = {
             'index': {

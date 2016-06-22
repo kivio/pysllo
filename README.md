@@ -39,7 +39,7 @@ from pysllo.formatters import JsonFormatter
 from pysllo.utils import LoggersFactory
 
 # configuration
-host, port, limit = 'localhost', 9000
+host, port = 'localhost', 9000
 handler = ElasticSearchUDPHandler([(host, port)])
 formatter = JsonFormatter()
 handler.setFormatter(formatter)

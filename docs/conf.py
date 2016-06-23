@@ -129,6 +129,9 @@ html_theme = 'alabaster'
 html_theme_options = {
     'fixed_sidebar': True,
     'analytics_id': 'UA-79713650-1',
+    'github_user': 'kivio',
+    'github_repo': 'pysllo',
+    'github_banner': True
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

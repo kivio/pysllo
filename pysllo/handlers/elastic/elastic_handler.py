@@ -12,9 +12,9 @@ class ElasticSearchUDPHandler(logging.Handler):
 
         To do that is used UDP connection, it's required to configure
         UDP bulk insert in your Elastic cluster.
-        Another requirement is to use `pysllo.formatters.JsonFormatter` or other
-        JSON formatter for that handler because default ElasticSearch Bulk
-        format is list of JSON objects.
+        Another requirement is to use `pysllo.formatters.JsonFormatter`
+        or other JSON formatter for that handler because default
+        ElasticSearch Bulk format is list of JSON objects.
 
         For more information about this configuration see elastic page about
         UDP messages `here

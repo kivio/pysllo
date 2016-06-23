@@ -17,12 +17,20 @@ class JsonFormatter(logging.Formatter):
     """
     JsonFormatter give logging possibility to convert your logs into JSON
     records that give possibility to save it in document based databases
+
+    To use it simple add this formatter to handler that support JSON messages.
     """
 
     _limit = 9000
     _doc_type = 'logs'
 
     def __init__(self, name='logs', limit=9000):
+        """
+        Configure limit of bytes in message, and name of document store
+
+        :param name: (str) name of DB in store
+        :param limit: (int) maximum number of bytes in message
+        """
         JsonFormatter._doc_type = name
         JsonFormatter._limit = limit
 
@@ -164,7 +172,7 @@ class JsonFormatter(logging.Formatter):
         """
         It's standard logging method to format record to JSON
 
-        :param record:
+        :param record: (LogRecord) object to be serialized
         """
         index_data = {
             'index': {

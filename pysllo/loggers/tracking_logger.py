@@ -18,12 +18,51 @@ class TrackingLogger(PropagationLogger):
     >>> logging.setLoggerClass(TrackingLogger)
     >>> log = logging.getLogger('name')
 
+    Tracking logger can be use in two ways, as context and as decorator.
+
+    Context example:
+
+    >>> logger.setLevel(logging.INFO)
+    >>> try:
+    >>>    with logger.trace:
+    >>>        logger.debug(msg1)
+    >>>        logger.info(msg2)
+    >>>        raise Exception
+    >>> except Exception:
+    >>>    pass
+
+    In this case after exception occurs logs on all level will be
+    pushed to handler.
+
+    Decorator example:
+
+    >>> loggger.setLevel(logging.CRITICAL)
+    >>> @logger.trace()
+    >>> def trace_func():
+    >>>    logger.debug(msg1)
+    >>>    logger.info(msg2)
+    >>>    raise Exception
+    >>>
+    >>> try:
+    >>>    trace_func()
+    >>> except Exception:
+    >>>    pass
+
+    This is same case like previous by using tracer object as decorator.
     """
 
     _tracer = Tracer()
     _is_tracking_enable = False
 
     def __init__(self, name, level=logging.NOTSET, propagation=False):
+        """
+        Used automatically by `getLogger` but if you use config file,
+        you can configure propagation from start which is fine option
+
+        :param name: (str) logger name
+        :param level: (int) logging level
+        :param propagation: (bool) on/off propagation from start
+        """
         PropagationLogger.__init__(self, name, level, propagation)
         self._trace_ctx = TraceContext(self)
 
@@ -33,7 +72,9 @@ class TrackingLogger(PropagationLogger):
         Return tracer object, tracer make possible to track logs by context
         or as decorator
 
-        :return: Tracer
+        :return: (Tracer) special object with is context \
+        or decorator to tracking logs
+
         """
         return self._trace_ctx
 
@@ -46,7 +87,7 @@ class TrackingLogger(PropagationLogger):
         Make tracking enable in whole logging. If force_level is configured on
         other level that after exception logs to that level were pushed out.
 
-        :param force_level: int - logging level
+        :param force_level: (int) logging level
         """
         TrackingLogger._is_tracking_enable = True
         self.force_level(force_level)

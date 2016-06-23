@@ -12,10 +12,24 @@ class ElasticSearchUDPHandler(logging.Handler):
 
         To do that is used UDP connection, it's required to configure
         UDP bulk insert in your Elastic cluster.
-        Another requirement is to use JsonFormatter for that handler because
-        default ElasticSearch Bulk format is list of JSON objects.
+        Another requirement is to use `pysllo.formatters.JsonFormatter` or other
+        JSON formatter for that handler because default ElasticSearch Bulk
+        format is list of JSON objects.
 
-        For more information about this configuration see manual page.
+        For more information about this configuration see elastic page about
+        UDP messages `here
+        <https://www.elastic.co/guide/en/logstash/current/plugins-inputs-udp.html>`_.
+
+        To use this handler just setup:
+
+        >>> host, port = 'localhost', 9000
+        >>> handler = ElasticSearchUDPHandler([(host, port)])
+        >>> formatter = JsonFormatter()
+        >>> handler.setFormatter(formatter)
+        >>> log = logging.getLogger('test')
+        >>> log.setLevel(logging.DEBUG)
+        >>> log.addHandler(handler)
+
     """
     _buffer = []
     _current_size = 0
@@ -26,6 +40,19 @@ class ElasticSearchUDPHandler(logging.Handler):
 
     def __init__(self, connections,
                  level=logging.NOTSET, name='logs', limit=9000, backup=False):
+        """
+        Configure most important thing to setting this handler, list of
+        connections is required, you can set more than one them round robin
+        algorithm will be used to make next connections
+
+        :param connections: (tuple or list) list of tuples with \
+        server address and port
+        :param level: (int) logging level
+        :param name: (str) logger name
+        :param limit: (int) byte size of buffer, after this limit buffer is \
+        pushed to elastic cluster
+        :param backup: on/off backup
+        """
         logging.Handler.__init__(self, level)
         self._connection = UDPBuffer(connections, limit=limit)
         ElasticSearchUDPHandler._doc_type = name
@@ -37,7 +64,7 @@ class ElasticSearchUDPHandler(logging.Handler):
         """
         Set path to backup files
 
-        :param path: unix path
+        :param path: (str) unix path
         """
         ElasticSearchUDPHandler._backup_path = \
             path + ("/" if not path.endswith('/') else "")
@@ -66,7 +93,7 @@ class ElasticSearchUDPHandler(logging.Handler):
         have too many connections to DB and to have too big snap of messages
         that can make delay's on real time dashboards
 
-        :param limit: int, number of bytes
+        :param limit: (int) number of bytes
         """
         ElasticSearchUDPHandler._limit = limit
 
@@ -75,7 +102,7 @@ class ElasticSearchUDPHandler(logging.Handler):
         """
         Special method that create identifier for today logs
 
-        :return: dict
+        :return: (dict)
         """
         return '-'.join([
             ElasticSearchUDPHandler._doc_type,
@@ -87,7 +114,7 @@ class ElasticSearchUDPHandler(logging.Handler):
         Is standard logging Handler method that send message to receiver, in
         this case message is saved in buffer
 
-        :param record:
+        :param record: (LogRecord) - record to send
         """
         msg = self.format(record)
         data_size = sys.getsizeof(msg, 0)
@@ -114,7 +141,7 @@ class ElasticSearchUDPHandler(logging.Handler):
         """
         Method that save messages to backup if this functionality is enabled
 
-        :param data:
+        :param data: (str) - string version of buffered data
         """
         if self._backup_enabled:
             path = self._backup_path + self.index()

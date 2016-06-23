@@ -3,10 +3,15 @@
 Pysllo
 ======
 
-Make your python logging more structured and easy to aggregate using all
-features of pysllo. Pysllo is set of useful python logging extenders
-that make possible saving logs into StackLight with possibility of flow
-tracking, data binding and raising all logs if error occurs.
+Pysllo is set of useful python logging extenders that give possibility to
+bind additional data to logs, raising all logs if error occurs or flow tracks
+with tools like Elastic Stack or other monitoring tools based on document databases.
+
+The most important benefit of using pysllo is that it's is just extension to
+normal python logging library. It not requiring from you to change whole logs
+implementation in your application. You can easy change just part of logging
+configuration and use this tool in that part of code. It's really simple to
+start working with Pysllo.
 
 For more information go to documentation on
 `ReadTheDocs <http://pysllo.readthedocs.io/>`__.

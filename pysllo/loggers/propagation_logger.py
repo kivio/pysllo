@@ -19,12 +19,44 @@ class PropagationLogger(Logger):
     >>> logging.setLoggerClass(PropagationLogger)
     >>> log = logging.getLogger('name')
 
+    Most popular usage of this logger is to propagate level between functions
+    used in some scope.
+    For example:
+
+    >>> logger.set_propagation(True)
+    >>> logger.setLevel(logging.INFO)
+    >>>
+    >>> def test_second_level():
+    >>>    logger.debug("msg2")
+    >>>
+    >>> @logger.level_propagation(logging.DEBUG)
+    >>> def test_first_level():
+    >>>    logger.debug("msg1")
+    >>>    test_second_level()
+    >>>
+    >>> test_first_level()
+    >>> test_second_level()
+
+    In this case instead of globally configured level INFO if function
+    `test_second_level` is used in scope where propagation is enabled
+    log from `test_second_level` will be pushed to handler ignoring
+    global configuration. In second run of this function without propagation
+    log on level DEBUG from that function will be dropped because there is
+    normal configuration scope.
     """
 
     _forcing = {}
     _global_propagation_level = logging.NOTSET
 
     def __init__(self, name, level=logging.NOTSET, propagation=False):
+        """
+        Used automatically by `getLogger` but if you use config file,
+        you can configure propagation from start which is fine option
+
+        :param name: (str) logger name
+        :param level: (int) logging level
+        :param propagation: (bool) on/off propagation from start
+        """
         Logger.__init__(self, name, level)
         self._level_propagation = propagation
 
@@ -32,7 +64,7 @@ class PropagationLogger(Logger):
         """
         Function that enable/disable propagation level functionality
 
-        :param propagation: bool
+        :param propagation: (bool) make propagation on/off
         """
         if isinstance(propagation, bool):
             self._level_propagation = propagation
@@ -68,7 +100,7 @@ class PropagationLogger(Logger):
         """
         Decorator that give propagation functionality to decorated function
 
-        :param level: int - logging level
+        :param level: (int) logging level
         """
         def decor(f):
             @wraps(f)
@@ -85,8 +117,8 @@ class PropagationLogger(Logger):
         """
         Function that make possible to force level value for specific loggers
 
-        :param args: level name or dict with configuration
-        :param kwargs: name of logger and value
+        :param args: (str or dict) level name or configuration for more levels
+        :param kwargs: (dict) name of logger and value as elements
         """
         if len(args) > 1:
             raise TypeError("force_level() takes exactly one argument "

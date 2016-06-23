@@ -5,6 +5,15 @@ class LoggersFactory(object):
     """
     LoggersFactory is static helper that makes combined Logger class with
     possible maximum features that you want to use.
+
+    To use it:
+
+    >>> MixedLogger = LoggersFactory.make(
+    >>>    tracking_logger=True,
+    >>>    structured_logger=True
+    >>> )
+    >>> logging.setLoggerClass(MixedLogger)
+    >>> log = logging.getLogger('test')
     """
 
     @staticmethod
@@ -15,10 +24,10 @@ class LoggersFactory(object):
         Method based on your choices create on class that support all chooses
         functions.
 
-        :param structured_logger: bool
-        :param propagation_logger: bool
-        :param tracking_logger: bool
-        :return: MixedLogger class
+        :param structured_logger: (bool) on/off structured logger features
+        :param propagation_logger: (bool) on/off propagation possibility
+        :param tracking_logger: (bool) on/off tracking function
+        :return: (MixedLogger class) combined logger class
         """
 
         class XYZ(object):

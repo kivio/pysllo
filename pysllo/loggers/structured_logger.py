@@ -16,6 +16,18 @@ class StructuredLogger(Logger):
     >>> logging.setLoggerClass(StructurredLogger)
     >>> log = logging.getLogger('name')
 
+    Most important feature is possibility to binding values to logs using
+    simple named parameters or bind function.
+
+    Example:
+
+    >>> log.bind(user=request.user, ip=request.get('IP_ADDR'))
+    >>> log.info('User login correctly')
+    >>> log.debug('Request keywords %s', request, headers=request.headers, \
+cookies=session.cookies)
+    >>> request.logout()
+    >>> log.unbind('user', 'ip')
+
     """
     _context = {}
 
@@ -49,7 +61,7 @@ class StructuredLogger(Logger):
         >>> log.get('ip')
         127.0.0.1
 
-        :param item: (str) - name of context element to get
+        :param item: (str) - name of element to get from context
         :param default: (object) - default value if element is not in context
         :return: (object)
         """

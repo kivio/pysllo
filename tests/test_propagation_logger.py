@@ -97,6 +97,7 @@ def test_forcing_level_with_kwargs_by_level(propagation_logger, handler):
 
 
 def test_forcing_level_by_dict(propagation_logger, handler):
+    propagation_logger.reset_level()
     msg1 = "TEST1"
     msg2 = "TEST2"
     propagation_logger.setLevel(logging.INFO)
